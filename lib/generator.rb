@@ -8,6 +8,10 @@ module Treasure
 	@@treasure_types = ["art", "jeweled items", "goods", "coins", "furnishings and clothing",
 		"gems", "special and magic items"]
 
+	@@art_values = [0.001, 0.05, 0.25, 1, 10, 25, 50, 75, 100, 150, 200, 300, 400, 
+		500, 750, 1000, 1500, 2000, 3000, 4000, 5000, 7500, 10000, 20000, 40000, 80000,
+		150000, 250000, 400000, 800000, 1000000]
+
 	def self.treasure_type(roll)
 		case roll
 		when 1
@@ -121,12 +125,135 @@ module Treasure
 		end
 	end
 
+	def self.art_treasure_type(roll)
+		case roll
+		when 1..2
+			"paper art"
+		when 3..4
+			"fabric art"
+		when 5..6
+			"painting"
+		when 7..8
+			"crafts"
+		when 9..10
+			"carving"
+		when 11..12
+			"ceramics"
+		when 13..14
+			"glasswork"
+		when 15..17
+			"stonework"
+		when 18..19
+			"metalwork"
+		when 20
+			"magical"
+		end
+	end
+
+	def self.art_value_base(roll)
+		case roll
+		when 1
+			["abstract",-2]
+		when 2
+			["monster",-1]
+		when 3
+			["humanoid",0]
+		when 4..5
+			["natural",0]
+		when 6
+			["supernatural",0]
+		when 7..9
+			["local",0]
+		when 10..12
+			["historical",0]
+		when 13..17
+			["religious",0]
+		when 18..19
+			["wealthy/nobel",1]
+		when 20
+			["royalty", 2]
+		end
+	end
+
+	def self.artist_reknown(roll)
+		case roll
+		when 1..15
+			["unknown artist",-3]
+		when 16..30
+			["obscure artist",-2]
+		when 31..50
+			["locally known artist",-1]
+		when 51..70
+			["regionally known artist",0]
+		when 71..90
+			["nationally known artist",1]
+		when 91..95
+			["continentally known artist",2]
+		when 96..99
+			["world reknown artist",3]
+		when 100
+			["ubiquitous artist", 4]
+		end
+	end
+
+	def self.generate_art_treasure(gp_size)
+
+		art = { :type => "art", :descriptions => [], :value => 0}
+
+		value_adjustment = 0
+
+		art_value = art_value_base(roll("1d20"))
+		art[:descriptions] << art_value[0]
+		value_adjustment += art_value[1]
+
+		artist = artist_reknown(roll("1d100"))
+		art[:descriptions] << artist[0]
+		value_adjustment += artist[1]
+
+		art_value_index = @@art_values.find_index(
+			@@art_values.min { |a,b| (a-gp_size).abs <=> (b-gp_size).abs })
+		
+		art_value_index += value_adjustment
+		art[:value] = @@art_values[art_value_index]
+
+		art
+	end
+
+	def self.generate_coins_treasure(gp_size)
+	end
+
+	def self.generate_gems_treasure(gp_size)
+	end
+
+	def self.generate_goods_treasure(gp_size)
+	end
+
+	def self.generate_furnishings_and_clothing_treasure(gp_size)
+	end
+
+	def self.generate_special_and_magic_items_treasure(gp_size)
+	end
+
+	def self.generate_jeweled_items_treasure(gp_size)
+	end
+
 	def generate(treasure_units=1, treasure_unit_size=200)
 
 		treasure_units.times do |hoard|
 
-			treasure_type = treasure_type(roll("1d20"))
-			puts treasure_type
+			treasure_type_name = treasure_type(roll("1d20")).gsub(' ','_')
+			result = self.send("generate_#{treasure_type_name}_treasure".to_sym,
+				treasure_unit_size)
+			
+			unless result.nil?
+				str = "#{result[:type]} "
+
+				str.concat("(")
+				str.concat(result[:descriptions].join(', '))
+				str.concat(") worth #{result[:value]} gp")
+				puts str
+			end
+
 			container = treasure_container(roll("1d10"))
 			puts "\tcontained in #{container}"
 
