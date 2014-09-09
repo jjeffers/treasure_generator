@@ -1,2 +1,36 @@
-<h1>Generator#show</h1>
-<p>Find me in app/views/generator/show.html.erb</p>
+<h1>Treasure!</h1>
+<div class="row">
+<span>Total: <%= @treasure[:total] %> gp</span>
+</div>
+<div class="row">
+	<% @treasure[:parcels].each_with_index do |parcel, index| %>
+		<div>
+			parcel <%= index + 1 %> total: <%= parcel[:total] %> gp 
+		</div> 
+		<% parcel[:treasures].each do |treasure| %>
+		<div class="row">
+			<div class="large-6 large-offset-1 columns">
+				<span><%= treasure[:type] %> (<%= treasure[:descriptions].join(", ") %>) worth <%= treasure[:value] %> gp</span>
+			</div>
+		</div>
+			
+
+			<% if not treasure[:hidden_by].nil? %>
+			<div class="row">
+				<div class="large-6 large-offset-1 columns">
+					<span>hidden by <%= treasure[:hidden_by] %></span>
+				</div>
+			</div>
+			<% end %>
+
+			<% if not treasure[:trapped_by].nil? %>
+			<div class="row">
+				<div class="large-6 large-offset-1 columns">
+					<span>hidden by <%= treasure[:trapped_by] %></span>
+				</div>
+			</div>
+			<% end %>
+		
+		<% end %>
+	<% end %>
+</div>

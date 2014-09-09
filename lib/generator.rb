@@ -1,4 +1,6 @@
 require "dicebag"
+require "simple-random"
+
 module Treasure
 
 	def self.roll(str)
@@ -14,6 +16,14 @@ module Treasure
 
 	@@gem_values = [0.001, 0.05, 0.25, 1, 25, 75, 250, 750, 2500, 10000,
 		 20000, 40000, 800000, 1000000]
+
+	def self.random_value(mean)
+		sr = SimpleRandom.new
+		sr.set_seed(Time.now)
+		value = sr.normal(mean, 10).to_i
+		puts value
+		value
+	end
 
 	def self.treasure_type(roll)
 		case roll
@@ -356,13 +366,14 @@ module Treasure
 			@@art_values.min { |a,b| (a-gp_size).abs <=> (b-gp_size).abs })
 		
 		art_value_index += value_adjustment
-		art[:value] = @@art_values[art_value_index]
+		art[:value] = random_value(@@art_values[art_value_index])
 
 		art
 	end
 
 	def self.generate_coins_treasure(gp_size)
-		coins = { :type => "coins", :descriptions => [], :value => gp_size}
+		coins = { :type => "coins", :descriptions => [], 
+			:value => random_value(gp_size)}
 
 		coins[:descriptions] << case roll("1d12")
 		when 1..2
@@ -464,13 +475,14 @@ module Treasure
 
 		gem_value_index = @@gem_values.find_index(
 			@@gem_values.min { |a,b| (a-gp_size).abs <=> (b-gp_size).abs })
-		gems[:value] = @@gem_values[gem_value_index]
+		gems[:value] = random_value(@@gem_values[gem_value_index])
 		gems
 	end
 
 	def self.generate_goods_treasure(gp_size)
 
-		goods = { :type => "goods (low and high value)", :descriptions => [], :value => gp_size}
+		goods = { :type => "goods (low and high value)", :descriptions => [], 
+			:value => random_value(gp_size) }
 
 		goods[:descriptions] << case roll("1d100")
 		when 1..8
@@ -540,7 +552,8 @@ module Treasure
 	end
 
 	def self.generate_furnishings_and_clothing_treasure(gp_size)
-		furnishings = { :type => "furnishings/clothing", :descriptions => [], :value => gp_size}
+		furnishings = { :type => "furnishings/clothing", :descriptions => [], 
+			:value => random_value(gp_size) }
 
 		furnishings[:descriptions] << case roll("1d100")
 		when 1
@@ -762,7 +775,8 @@ module Treasure
 	def self.generate_jeweled_items_treasure(gp_size)
 
 		value_adjustment = 0
-		jeweled_item = { :type => "jeweled item", :descriptions => [], :value => gp_size}
+		jeweled_item = { :type => "jeweled item", :descriptions => [], 
+			:value => random_value(gp_size) }
 
 		jeweled_item[:descriptions] << case roll("1d100")
 		when 1..2
@@ -905,13 +919,13 @@ module Treasure
 			@@art_values.min { |a,b| (a-gp_size).abs <=> (b-gp_size).abs })
 		
 		value_index += value_adjustment
-		jeweled_item[:value] = @@art_values[value_index]
+		jeweled_item[:value] = random_value(@@art_values[value_index])
 		jeweled_item
 	end
 
 	def generate(treasure_units=1, treasure_unit_size=200)
 
-		treasure_units.times.collect do |hoard|
+		treasure = treasure_units.times.collect do |hoard|
 
 			treasure_type_name = treasure_type(roll("1d20")).gsub(' ','_')
 			result = self.send("generate_#{treasure_type_name}_treasure".to_sym,
@@ -931,8 +945,35 @@ module Treasure
 			result
 		end
 
+		{ :total => treasure.inject(0) { |sum, x| sum + x[:value] }, 
+			:treasures => treasure }
+
 	end
 
 	module_function :generate
+
+	def hoard_size
+		case roll("1d20")
+		when 1
+			1
+		when 2..3
+			roll("1d6")/2
+		when 4..7
+			3 + (roll("1d6")-2)
+		when 8..13
+			4+(roll("1d4")-1)
+		when 14..16
+			6+roll("1d4")
+		when 17..18
+			6+roll("2d4")
+		when 19
+			6+roll("3d4")
+		when 20
+			4*roll("1d4")+2
+		end
+
+	end
+
+	module_function :hoard_size
 
 end

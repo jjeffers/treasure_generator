@@ -41,4 +41,5 @@ gem 'spring',        group: :development
 # gem 'debugger', group: [:development, :test]
 
 gem "dicebag"
-gem "distribution"
+gem "simple-random"
+
