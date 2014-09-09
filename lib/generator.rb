@@ -12,6 +12,9 @@ module Treasure
 		500, 750, 1000, 1500, 2000, 3000, 4000, 5000, 7500, 10000, 20000, 40000, 80000,
 		150000, 250000, 400000, 800000, 1000000]
 
+	@@gem_values = [0.001, 0.05, 0.25, 1, 25, 75, 250, 750, 2500, 10000,
+		 20000, 40000, 800000, 1000000]
+
 	def self.treasure_type(roll)
 		case roll
 		when 1
@@ -255,7 +258,7 @@ module Treasure
 		when 11..25
 			["small",-1]
 		when 26..65
-			["average",0]
+			["average size",0]
 		when 66..85
 			["large",1]
 		when 86..90
@@ -301,7 +304,7 @@ module Treasure
 		when 11..25
 			["worn",-1]
 		when 26..65
-			["average",0]
+			["average condition",0]
 		when 66..85
 			["good condition",1]
 		when 86..90
@@ -359,12 +362,181 @@ module Treasure
 	end
 
 	def self.generate_coins_treasure(gp_size)
+		coins = { :type => "coins", :descriptions => [], :value => gp_size}
+
+		coins[:descriptions] << case roll("1d12")
+		when 1..2
+			"copper"
+		when 3..5
+			"silver"
+		when 6..7
+			"electrum"
+		when 8..10
+			"gold"
+		when 11
+			"hard silver"
+		when 12
+			"platinum"
+		end
+
+		coins
+	end
+
+	def self.gem_stone(gp_size)
+
+		ornamental = ["banded agate", "eye agate", "moss agate", "azurite", 
+			"bone", "hematite", "lapis lazuli", "malachite", "obsidian",
+			"pyrite", "tiger eye", "turquoise", "mother of pearl"]
+
+		semiprecious = ["amazon stone", "bloodstone", "carnelian", "chalcedony",
+			"chrysoprase", "citrine", "jasper", "moonstone", "onyx", "rock crystal",
+			"sardonyx", "serpentine", "smoky quartz", "star rose quartz", "variscite"]
+
+		fancy = ["amber", "alamadine", "alexandrite", "amethyst", "chrysoberyl",
+			"coral", "diopside", "garnet", "iocolite", "jade", "jet", "morganite",
+			"nephrite", "pearl", "spinel", "spessarite", "sugulite", "rubelite",
+			"tourmaline", "zircon"]
+
+		precious = ["aquamarine", "garnet", "black pearl", "peridot", "spinel",
+			"kunzite", "topaz", "tanzanite"]
+
+		gemstones = ["black opal", "emerald", "fire opal", "garnet", "opal",
+			"amethyst", "topaz", "sapphire", "star ruby", "star sapphire"]
+
+		jewels = ["ammolite", "black sapphire", "diamond", "jacinth", "emerald",
+			"ruby"]
+
+		case gp_size
+		when 1..25
+			ornamental.sample(1).first
+		when 26..75
+			semiprecious.sample(1).first
+		when 76..250
+			fancy.sample(1).first
+		when 251..750
+			precious.sample(1).first
+		when 751..2500
+			gemstones.sample(1).first
+		when 2501..10000
+			jewels.sample(1).first
+		end
+
+	end
+
+	def self.gem_quality(roll)
+		case roll
+		when 1..5
+			["badly flawed", -3]
+		when 6..10
+			["flawed", -2]
+		when 11..25
+			["minor inclusions", -1]
+		when 26..65
+			["average quality", 0]
+		when 66..85
+			["good quality", 1]
+		when 86..90
+			["excellent quality", 2]
+		when 91..95
+			["nearly perfect", 3]
+		when 96..98
+			["perfect", 4]
+		when 99..100
+			["flawless", 5]
+		end
 	end
 
 	def self.generate_gems_treasure(gp_size)
+
+		value_adjustment = 0
+
+	  gems = { :type => "gems", :descriptions => [], :value => 0}
+
+	  gems[:descriptions] << gem_stone(gp_size)
+
+		quality = gem_quality(roll("1d100"))
+		gems[:descriptions] << quality[0]
+		value_adjustment += quality[1]
+
+		size = art_size(roll("1d100"))
+		gems[:descriptions] << size[0]
+		value_adjustment += size[1]
+
+		gem_value_index = @@gem_values.find_index(
+			@@gem_values.min { |a,b| (a-gp_size).abs <=> (b-gp_size).abs })
+		gems[:value] = @@gem_values[gem_value_index]
+		gems
 	end
 
 	def self.generate_goods_treasure(gp_size)
+
+		goods = { :type => "goods (low and high value)", :descriptions => [], :value => gp_size}
+
+		goods[:descriptions] << case roll("1d100")
+		when 1..8
+			"cotton/wool/flax"
+		when 9..18
+			"furs/hides/skins"
+		when 19..22
+			"ingots: iron/copper/tin/lead"
+		when 23..26
+			"lumber"
+		when 27..35
+			"wine/ale/beer/liquor"
+		when 36..48
+			"grain/foodstuffs"
+		when 49..52
+			"livestock/slaves"
+		when 53..65
+			"sugar/spices/hemp/jute/pipeweed/herbs/salt"
+		when 66..69
+			"dressed stone"
+		when 70..73
+			"cloth/fabric"
+		when 74..79
+			"leather goods"
+		when 80..87
+			"pewter/bronze/copperware/ceramics"
+		when 88..95
+			"wooden items"
+		when 96..00
+			"steel bar stock"
+		end
+
+		goods[:descriptions] << case roll("1d100")
+		when 1..12
+			"armor/weapons"
+		when 13..16
+			"coffee/tea"
+		when 17..20
+			"exotic fruits"
+		when 21..30
+			"leather/silk/fabrics"
+		when 31..33
+			"gold/silver/electrum/platinum bars"
+		when 34..37
+			"ivory"
+		when 38..40
+			"narcotics/medicine"
+		when 41..46
+			"perfumes"
+		when 47..48
+			"ingots, rare metals"
+		when 49..50
+			"rare woods"
+		when 51..63
+			"religious artifacts"
+		when 64..85
+			"scrolls/books"
+		when 86..90
+			"ingots, electrum/silver/gold/platinum"
+		when 91..98
+			"laboratory items"
+		when 99-00
+			"magical components"
+		end
+
+		goods
 	end
 
 	def self.generate_furnishings_and_clothing_treasure(gp_size)
