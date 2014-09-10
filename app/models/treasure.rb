@@ -10,33 +10,13 @@ class Treasure
   	@descriptions = []
   	@ttype = ""
   	@value = 0
-  	@hidden_by = concealed? ? hidden_by : nil
-  	@trapped_by = trapped? ? trapped_by : nil
   	@container = container
+  	@hidden_by = concealed? ? concealment : nil
+  	@trapped_by = trapped? ? trap : nil
+  	
 
 
   end
-
-  def create
-  	run_callbacks :create do
-    	# Your create action methods here
-  	end
-	end
-
-	after_create :check_for_containers_concealment_and_traps
-
-	def check_for_containers_concealment_and_traps
-
-		container = treasure_container
-
-	  if treasure_concealed?
-			hidden_by = treasure_concealment
-		end
-
-		if treasure_trapped?
-			trapped_by = treasure_trap
-		end
-	end
 
 	attr_accessor :ttype, :value, :descriptions, :hidden_by, :trapped_by, :container
 
@@ -118,7 +98,7 @@ class Treasure
 	end
 
 	def concealed?(roll=Die::roll("1d20"))
-		roll == 1
+		return roll == 1
 	end
 
 	def concealment(roll=Die::roll("1d10"))
@@ -145,7 +125,8 @@ class Treasure
 	end
 
 	def trapped?(roll=Die::roll("1d20"))
-		roll == 1
+		roll -= 4 if @container.include?("chest")
+		roll <= 1
 	end
 
 	def trap(roll=Die::roll("1d20"))

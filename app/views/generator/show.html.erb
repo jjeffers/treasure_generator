@@ -17,10 +17,17 @@
 				</div>
 			</div>
 				
+				<% if treasure.container != "loose" %>
+				<div class="row">
+					<div class="large-8 large-offset-2 columns">	
+						<span>contained in <%= treasure.container %></span>
+					</div>
+				</div>
+				<% end %>
 
 				<% if not treasure.hidden_by.nil? %>
 				<div class="row">
-					<div class="large-8 large-offset-1 columns">
+					<div class="large-8 large-offset-2 columns">
 						<span>hidden by <%= treasure.hidden_by %></span>
 					</div>
 				</div>
@@ -28,8 +35,8 @@
 
 				<% if not treasure.trapped_by.nil? %>
 				<div class="row">
-					<div class="large-8 large-offset-1 columns">
-						<span>hidden by <%= treasure.trapped_by %></span>
+					<div class="large-8 large-offset-2 columns">
+						<span>trapped by <%= treasure.trapped_by %></span>
 					</div>
 				</div>
 				<% end %>
