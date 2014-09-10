@@ -1,4 +1,4 @@
-require "generator"
+
 class GeneratorController < ApplicationController
   def index
   end
