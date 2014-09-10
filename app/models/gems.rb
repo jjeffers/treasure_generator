@@ -25,9 +25,7 @@ class Gems < Treasure
 
 		gem_value_index = @@gem_values.find_index(
 			@@gem_values.min { |a,b| (a-@value).abs <=> (b-@value).abs })
-		puts "gem value index #{gem_value_index} #{@@gem_values[gem_value_index]}"
 		gem_value_index += value_adjustment
-		puts "gem value index #{gem_value_index} #{@@gem_values[gem_value_index]}"
 		@value = gem_value_variation(gem_value_index)
 
 	end

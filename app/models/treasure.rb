@@ -10,9 +10,10 @@ class Treasure
   	@descriptions = []
   	@ttype = ""
   	@value = 0
-  	@hidden_by = nil
-  	@trapped_by = nil
-  	@container = nil
+  	@hidden_by = concealed? ? hidden_by : nil
+  	@trapped_by = trapped? ? trapped_by : nil
+  	@container = container
+
 
   end
 
@@ -39,13 +40,7 @@ class Treasure
 
 	attr_accessor :ttype, :value, :descriptions, :hidden_by, :trapped_by, :container
 
-	@@treasure_types = ["art", "jeweled items", "goods", "coins", "furnishings and clothing",
-		"gems", "special and magic items"]
-
-	@@gem_values = [0.001, 0.05, 0.25, 1, 25, 75, 250, 750, 2500, 10000,
-		 20000, 40000, 800000, 1000000]
-
-	def self.generate(treasure_units=1, treasure_unit_size=200)
+	def self.generate(treasure_units=hoard_size, treasure_unit_size=200)
 
 		treasures = treasure_units.times.collect { generate_treasure(treasure_unit_size) }
 
@@ -53,7 +48,6 @@ class Treasure
 			:treasures => treasures }
 
 	end
-
 
 	def self.generate_treasure(treasure_unit_size, roll=Die::roll("1d20"))
 		case roll
@@ -80,25 +74,25 @@ class Treasure
 		when 1
 			1
 		when 2..3
-			roll("1d6")/2
+			Die::roll("1d6")/2
 		when 4..7
-			3 + (roll("1d6")-2)
+			3 + (Die::roll("1d6")-2)
 		when 8..13
-			4+(roll("1d4")-1)
+			4+(Die::roll("1d4")-1)
 		when 14..16
-			6+roll("1d4")
+			6+Die::roll("1d4")
 		when 17..18
-			6+roll("2d4")
+			6+Die::roll("2d4")
 		when 19
-			6+roll("3d4")
+			6+Die::roll("3d4")
 		when 20
-			4*roll("1d4")+2
+			4*Die::roll("1d4")+2
 		end
 
 	end
 
 
-	def treasure_container(roll=roll("1d10"))
+	def container(roll=Die::roll("1d10"))
 		case roll
 		when 1
 			"bags or sacks"
@@ -123,13 +117,11 @@ class Treasure
 		end
 	end
 
-	def treasure_concealed?(roll=roll("1d20"))
-		return false unless roll == 1
-			
-		true
+	def concealed?(roll=Die::roll("1d20"))
+		roll == 1
 	end
 
-	def self.treasure_concealment(roll=roll("1d10"))
+	def concealment(roll=Die::roll("1d10"))
 		case roll
 		when 1..2
 			"concealed"
@@ -152,13 +144,11 @@ class Treasure
 		end
 	end
 
-	def treasure_trapped?(roll=roll("1d20"))
-		return false unless roll == 1
-			
-		true
+	def trapped?(roll=Die::roll("1d20"))
+		roll == 1
 	end
 
-	def self.treasure_trap(roll=roll("1d20"))
+	def trap(roll=Die::roll("1d20"))
 		case roll
 		when 1
 			"contact poison on treasure"

@@ -12,7 +12,7 @@
 			</div> 
 			<% parcel[:treasures].each do |treasure| %>
 			<div class="row">
-				<div class="large-6 large-offset-1 columns">
+				<div class="large-8 large-offset-1 columns">
 					<span><%= treasure.ttype %> (<%= treasure.descriptions.join(", ") %>) worth <%= treasure.value %> gp</span>
 				</div>
 			</div>
@@ -20,7 +20,7 @@
 
 				<% if not treasure.hidden_by.nil? %>
 				<div class="row">
-					<div class="large-6 large-offset-1 columns">
+					<div class="large-8 large-offset-1 columns">
 						<span>hidden by <%= treasure.hidden_by %></span>
 					</div>
 				</div>
@@ -28,7 +28,7 @@
 
 				<% if not treasure.trapped_by.nil? %>
 				<div class="row">
-					<div class="large-6 large-offset-1 columns">
+					<div class="large-8 large-offset-1 columns">
 						<span>hidden by <%= treasure.trapped_by %></span>
 					</div>
 				</div>
