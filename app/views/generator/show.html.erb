@@ -1,3 +1,4 @@
+
 <div>
 	<div class="row">
 		<h1>Treasure!</h1>
@@ -6,11 +7,11 @@
 	<span>Total: <%= @treasure[:total] %> gp</span>
 	</div>
 	<div class="row">
-		<% @treasure[:parcels].each_with_index do |parcel, index| %>
+		<% @treasure[:hoards].each_with_index do |hoard, index| %>
 			<div>
-				parcel <%= index + 1 %> total: <%= parcel[:total] %> gp 
+				hoard <%= index + 1 %> total: <%= hoard[:total] %> gp 
 			</div> 
-			<% parcel[:treasures].each do |treasure| %>
+			<% hoard[:treasures].each do |treasure| %>
 			<div class="row">
 				<div class="large-8 large-offset-1 columns">
 					<span><%= treasure.ttype %> (<%= treasure.descriptions.join(", ") %>) worth <%= treasure.value %> gp</span>

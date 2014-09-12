@@ -17,3 +17,17 @@
 //= require_tree .
 
 $(function(){ $(document).foundation(); });
+
+$(document).ready(function () {
+	$("#random_hoard_size").change(function() {
+		if ($("#random_hoard_size").is(':checked')) {
+  			$("#units").attr("disabled", "disabled");
+  			
+  		}
+  		else {
+  			$("#units").removeAttr("disabled");
+  			
+  		}
+	});
+});
+

@@ -1,7 +1,42 @@
+
+
+
 <h1>Treasure Generator</h1>
 
-<%= form_tag(generator_path) do -%>
+<%= form_tag(generator_path, :method => :get) do -%>
 
-	<%= submit_tag("Generate!") %>
+	<div class="row">
+	
+		<div class="large-3 columns">
+      <%= label_tag "Random Hoard Size?" %>
+      <%= check_box_tag "random_hoard_size", nil %>
+	  </div>
 
+	  <div id="hoard_size" class="large-4 columns">
+      <%= label_tag "Hoard Size" %>
+      <%= number_field_tag "units", 6 %>
+		</div>
+	</div>
+
+	<div class="row">
+	
+		<div class="large-3 columns">
+      <%= label_tag "Random Hoard Values?" %>
+      <%= check_box_tag "random_hoard_value", nil %>
+	  </div>
+	</div>
+
+	<div class="row">
+    <div class="large-3 columns">
+      <%= label_tag "Treasure Unit Size (gp)" %>
+      <%= number_field_tag "unit_size", 100 %>
+  	</div>
+  </div>
+
+	
+  <div class="row">
+		<%= submit_tag("Generate!", :class => "button [radius round]") %>
+	</div>
+	
 <% end %>
+

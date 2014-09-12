@@ -49,6 +49,36 @@ class Treasure
 
 	end
 
+	def self.base_value_of_hoard_multiplier(roll=Die::roll("1d20"))
+
+		case roll
+		when 1
+			0.01
+		when 2..3
+			0.10
+		when 4..8
+			0.25
+		when 9..14
+			0.5
+		when 15..24
+			0.75
+		when 25..76
+			1.0
+		when 77..86
+			1.5
+		when 87..92
+			2.0
+		when 93..97
+			3.0
+		when 98..99
+			5.0
+		when 100
+			10.0
+		end
+
+	end
+
+
 	def self.hoard_size(roll=Die::roll("1d20"))
 		case roll
 		when 1
