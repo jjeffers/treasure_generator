@@ -11,7 +11,7 @@ class GeneratorController < ApplicationController
 
   def show
 
-  	hoards = params.has_key?(:hoards) ? param[:hoards].to_i : 1
+  	hoards = params.has_key?(:hoards) ? params[:hoards].to_i : 1
   	
   	unit_size = params.has_key?(:unit_size) ? params[:unit_size].to_i : 100
 
@@ -37,6 +37,7 @@ class GeneratorController < ApplicationController
 
   	@treasure[:total] = @treasure[:hoards].inject(0) { |sum, x| sum + x[:total] }
 
+  	@description
   	respond_to do |format|
   		format.html
   		format.json { render json: @treasure }

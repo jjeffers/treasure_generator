@@ -29,5 +29,19 @@ $(document).ready(function () {
   			
   		}
 	});
+
+	$("#treasure_type").change(function() {
+		if ($("#treasure_type").val().length > 0) {
+  			$("#unit_size").attr("disabled", "disabled");
+  			
+  		}
+  		else {
+  			$("#unit_size").removeAttr("disabled");
+  			
+  		}
+	});
+
+
+	
 });
 
