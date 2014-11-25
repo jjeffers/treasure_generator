@@ -1,0 +1,38 @@
+<% consolidated_treasure.values.each do |container_group| %>
+	
+  <div class="row">
+    <div class="large-8 large-offset-1 columns">
+      <% if not container_group[:container].eql?("loose") %>
+        <span>in a <%= container_group[:container] %></span>
+      <% else %>
+        <span>(loose)</span>
+      <% end %>
+    </div>
+  </div>
+  
+  <% if not container_group[:hidden_by].nil? %>
+    <div class="row">
+      <div class="large-8 large-offset-2 columns">
+        <span>hidden by <%= container_group[:hidden_by] %></span>
+      </div>
+    </div>
+    <% end %>
+
+    <% if not container_group[:trapped_by].nil? %>
+    <div class="row">
+      <div class="large-8 large-offset-2 columns">
+        <span>trapped by <%= container_group[:trapped_by] %></span>
+      </div>
+    </div>
+    <% end %>
+
+
+  <% container_group[:treasures].each do |treasure| %>
+  	<div class="row">
+  		<div class="large-8 large-offset-3 columns">
+  			<span><%= treasure.ttype %> (<%= treasure.descriptions.join(", ") %>) worth <%= treasure.value %> gp</span>
+  		</div>
+  	</div>
+		
+	<% end %>
+<% end %>

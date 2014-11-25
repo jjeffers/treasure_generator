@@ -10,12 +10,9 @@ class Treasure
   	@descriptions = []
   	@ttype = ""
   	@value = 0
-  	@container = container
-  	@hidden_by = concealed? ? concealment : nil
-  	@trapped_by = trapped? ? trap : nil
-  	
-
-
+  	@container = generate_container
+  	@hidden_by = generate_concealment
+  	@trapped_by = generate_trap
   end
 
 	attr_accessor :ttype, :value, :descriptions, :hidden_by, :trapped_by, :container
@@ -102,7 +99,7 @@ class Treasure
 	end
 
 
-	def container(roll=Die::roll("1d10"))
+	def generate_container(roll=Die::roll("1d10"))
 		case roll
 		when 1
 			"bags or sacks"
@@ -131,7 +128,8 @@ class Treasure
 		return roll == 1
 	end
 
-	def concealment(roll=Die::roll("1d10"))
+	def generate_concealment(roll=Die::roll("1d10"))
+    return nil unless concealed? 
 		case roll
 		when 1..2
 			"concealed"
@@ -159,7 +157,8 @@ class Treasure
 		roll <= 1
 	end
 
-	def trap(roll=Die::roll("1d20"))
+	def generate_trap(roll=Die::roll("1d20"))
+    return nil unless trapped?
 		case roll
 		when 1
 			"contact poison on treasure"
