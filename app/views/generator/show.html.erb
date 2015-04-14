@@ -11,23 +11,7 @@
 			<div>
 				hoard <%= index + 1 %> total: <%= hoard[:total] %> gp 
 			</div> 
-			<% hoard[:treasures].each_with_index do |treasure, index| %>
-			<div class="row">
-				<div class="large-8 large-offset-1 columns">
-					<span><%= (index+1) %>. <%= treasure.ttype %> (<%= treasure.descriptions.join(", ") %>) worth <%= treasure.value %> gp</span>
-				</div>
-			</div>
-				
-				<% if treasure.container != "loose" %>
-				<div class="row">
-					<div class="large-8 large-offset-2 columns">	
-						<span>contained in <%= treasure.container %></span>
-					</div>
-				</div>
-				<% end %>
-
 				<%= render partial: "consolidated_treasure", :object => consolidate_containers(hoard) %>
-        
 		<% end %>
 	</div>
 </div>

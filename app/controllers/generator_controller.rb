@@ -39,7 +39,7 @@ class GeneratorController < ApplicationController
 
   	@treasure[:total] = @treasure[:hoards].inject(0) { |sum, x| sum + x[:total] }
 
-  	@description
+  	Rails.logger.info @treasure.inspect
   	respond_to do |format|
   		format.html
   		format.json { render json: @treasure }
