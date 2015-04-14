@@ -33,6 +33,8 @@ class GeneratorController < ApplicationController
   		Treasure.generate(treasure_units, unit_size)
   	end
   	
+    Rails.logger.info hoards.count
+
   	@treasure = { :hoards => hoards }
 
   	@treasure[:total] = @treasure[:hoards].inject(0) { |sum, x| sum + x[:total] }

@@ -19,6 +19,7 @@ class Treasure
 
 	def self.generate(treasure_units=hoard_size, treasure_unit_size=200)
 
+		Rails.logger.info "Trasure units: #{treasure_units}"
 		treasures = treasure_units.times.collect { generate_treasure(treasure_unit_size) }
 
 		{ :total => treasures.inject(0) { |sum, treasure| sum + treasure.value }, 
